@@ -1,0 +1,19 @@
+paths:
+  get:
+    summary: 'Get products'
+    description: 'Returns list of all products'
+    responses:
+      200:
+        description: 'Successfully request'
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Product'
+      400:
+        description: 'Client provided invalid data'
+      401:
+        description: 'Client provided either nonexistent or wrong credentials'
+      500:
+        description: 'Internal Server Error'
