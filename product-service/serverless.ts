@@ -1,13 +1,13 @@
 import type { AWS } from '@serverless/typescript';
-import {getProductById, getProducts} from "@functions/index";
+import * as functions from "@functions/index";
 
 const serverlessConfiguration: AWS = {
   service: 'product-service',
   frameworkVersion: '3',
+  useDotenv: true,
   plugins: [
     'serverless-esbuild',
-    'serverless-offline',
-    'serverless-webpack',
+    'serverless-offline'
   ],
   provider: {
     name: 'aws',
@@ -19,25 +19,22 @@ const serverlessConfiguration: AWS = {
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
+      DB_HOST: '${env:DB_HOST}',
+      DB_PORT: '${env:DB_PORT}',
+      DB_USERNAME: '${env:DB_USERNAME}',
+      DB_PASSWORD: '${env:DB_PASSWORD}',
+      DB_DATABASE: '${env:DB_DATABASE}',
+
     },
   },
-  // import the function via paths
-  functions: {
-    getProducts,
-    getProductById
-  },
+  functions,
   package: { individually: true },
   custom: {
-    webpack: {
-      webpackConfig: './webpack.config.js',
-      includeModules: true,
-      packager: 'yarn',
-    },
     esbuild: {
       bundle: true,
       minify: false,
       sourcemap: true,
-      exclude: ['aws-sdk'],
+      exclude: ['aws-sdk', 'pg-native'],
       target: 'node14',
       define: { 'require.resolve': undefined },
       platform: 'node',
