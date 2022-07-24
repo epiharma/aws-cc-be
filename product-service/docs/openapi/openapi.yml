@@ -1,0 +1,15 @@
+openapi: 3.0.0
+info:
+  title: 'Serverless TypeScript Boilerplate'
+  description: "Change this description."
+  version: 1.0.0
+
+paths:
+  /products:
+    $ref: './functions/get-products.yml#/paths'
+  /products/{id}:
+    $ref: './functions/get-product-by-id.yml#/paths'
+
+components:
+  schemas:
+    $ref: './models/product.yml'

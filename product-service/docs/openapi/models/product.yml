@@ -1,0 +1,18 @@
+Product:
+  type: object
+  required:
+    - id
+    - title
+    - count
+    - price
+  properties:
+    id:
+      type: string
+    title:
+      type: string
+    description:
+      type: string
+    count:
+      type: integer
+    price:
+      type: integer
