@@ -1,17 +1,24 @@
-import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/api-gateway';
-import { formatJSONResponse } from '@libs/api-gateway';
-import { middyfy } from '@libs/lambda';
-import {products} from "../../data.mock";
+import type {ValidatedEventAPIGatewayProxyEvent} from '@libs/api-gateway';
+import {formatJSONResponse} from '@libs/api-gateway';
+import {middyfy} from '@libs/lambda';
+import {DB} from "@libs/db";
 
 export const getProductById: ValidatedEventAPIGatewayProxyEvent<any> = async (event) => {
-  const id = (event.pathParameters.id).toString();
+    try {
+        const id = (event?.pathParameters?.id).toString();
+        if (!id) return formatJSONResponse(400, {message: 'Bad request'});
 
-  const product = products.find(product => product.id === id);
-  if (!product) return { statusCode: 404, body: null }
+        const product = await DB.getProductById(id);
+        if (!product) return formatJSONResponse(404, {message: 'Product not found'});
 
-  return formatJSONResponse({
-    product
-  });
+        return formatJSONResponse(200, {
+            product
+        });
+    } catch (error) {
+        return formatJSONResponse(500, {
+            message: error.message
+        });
+    }
 };
 
 export const main = middyfy(getProductById);
